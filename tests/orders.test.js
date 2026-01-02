@@ -29,5 +29,12 @@ describe('Orders API', () => {
     expect(res.body).toHaveProperty('items');
     expect(Array.isArray(res.body.items)).toBe(true);
     expect(res.body.items[0].product_id).toBe(pid);
+
+    // try to fetch with another user -> should be forbidden
+    await request(app).post('/auth/signup').send({ email: 'other@example.com', password: 'pass456', name: 'Other' });
+    const otherLogin = await request(app).post('/auth/login').send({ email: 'other@example.com', password: 'pass456' });
+    const otherToken = otherLogin.body.token;
+    const getRes = await request(app).get(`/orders/${res.body.id}`).set('Authorization', `Bearer ${otherToken}`);
+    expect(getRes.statusCode).toBe(403);
   });
 });
