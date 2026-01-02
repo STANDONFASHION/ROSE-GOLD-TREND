@@ -13,6 +13,10 @@ app.use('/products', productsRouter);
 const ordersRouter = require('./routes/orders');
 app.use('/orders', ordersRouter);
 
+// Auth
+const authRouter = require('./routes/auth');
+app.use('/auth', authRouter);
+
 // Error handler
 app.use((err, req, res, _next) => {
   console.error(err);
